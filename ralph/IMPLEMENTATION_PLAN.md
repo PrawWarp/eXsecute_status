@@ -9,7 +9,8 @@
 - **Project scaffolding**: Complete — package.json, tsconfig, next.config.ts, CLAUDE.md, all configs
 - **Phase 1**: Complete
 - **Phase 2**: Complete
-- **Next**: Phase 3 — Data Layer (Vercel KV)
+- **Phase 3**: Complete
+- **Next**: Phase 4 — Health Check Engine
 
 ## Known Issues
 
@@ -41,12 +42,12 @@ Tasks are ordered by dependency and priority. Each phase includes its own tests 
 
 ### Phase 3: Data Layer (Vercel KV)
 
-- [ ] Create src/lib/kv.ts — Vercel KV client wrapper for health check storage
-- [ ] Implement check result storage with 90-day auto-expiry (Redis TTL)
-- [ ] Implement service status read/write (current state, consecutive counts, last check timestamp)
-- [ ] Implement incident log storage and retrieval (sorted by timestamp, persisted indefinitely)
-- [ ] Implement 90-day uptime percentage calculation from stored check history
-- [ ] Write unit tests for KV data layer (mock KV client; test storage, retrieval, TTL expiry, uptime calculation)
+- [x] Create src/lib/kv.ts — Vercel KV client wrapper for health check storage
+- [x] Implement check result storage with 90-day auto-expiry (Redis TTL)
+- [x] Implement service status read/write (current state, consecutive counts, last check timestamp)
+- [x] Implement incident log storage and retrieval (sorted by timestamp, persisted indefinitely)
+- [x] Implement 90-day uptime percentage calculation from stored check history
+- [x] Write unit tests for KV data layer (mock KV client; test storage, retrieval, TTL expiry, uptime calculation)
 
 ### Phase 4: Health Check Engine
 

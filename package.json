@@ -13,6 +13,7 @@
     "ci": "npm run type-check && npm run lint && npm test && npm run build"
   },
   "dependencies": {
+    "@vercel/kv": "^3.0.0",
     "next": "^15",
     "react": "^19",
     "react-dom": "^19"
