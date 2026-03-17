@@ -64,12 +64,16 @@ describe("GET /api/status", () => {
     expect(body.incidents[0].id).toBe("inc-001");
   });
 
-  it("propagates errors when KV throws", async () => {
+  it("returns 503 when KV throws", async () => {
     mockKvFns.getServiceStatus.mockRejectedValue(new Error("KV connection failed"));
     mockKvFns.calculateUptimePercentage.mockResolvedValue(100);
     mockKvFns.getRecentIncidents.mockResolvedValue([]);
 
-    await expect(GET()).rejects.toThrow("KV connection failed");
+    const response = await GET();
+    expect(response.status).toBe(503);
+
+    const body = await response.json();
+    expect(body.error).toBe("Service temporarily unavailable");
   });
 
   it("handles empty state (no checks yet)", async () => {
