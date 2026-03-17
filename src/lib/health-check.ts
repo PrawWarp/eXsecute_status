@@ -63,14 +63,34 @@ export async function processCheckResult(
   const currentStatus = await getServiceStatus(service.id);
 
   if (!currentStatus) {
-    // First check ever — initialize status; count this check
+    // First check ever — initialize status
+    const initialState = record.healthy ? "up" : "down";
     await setServiceStatus({
       serviceId: service.id,
-      state: record.healthy ? "up" : "down",
-      consecutiveCount: 1,
+      state: initialState,
+      consecutiveCount: 0,
       lastCheckedAt: record.timestamp,
       lastResponseTimeMs: record.responseTimeMs,
     });
+
+    if (!record.healthy) {
+      await addIncident({
+        id: `inc-${Date.now()}`,
+        serviceId: service.id,
+        serviceName: service.name,
+        createdAt: record.timestamp,
+        resolvedAt: null,
+        downtimeMs: null,
+      });
+
+      if (await shouldSendAlert(service.id, "down")) {
+        await sendDownAlert(service.name, record.timestamp);
+        await recordAlertSent(service.id, "down");
+      }
+
+      return { transitioned: true, newState: "down" };
+    }
+
     return { transitioned: false };
   }
 
@@ -110,7 +130,7 @@ export async function processCheckResult(
         service.name,
         record.timestamp,
         record.responseTimeMs,
-        resolved?.downtimeMs ?? 0,
+        resolved?.downtimeMs ?? null,
       );
       await recordAlertSent(service.id, "up");
     }

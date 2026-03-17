@@ -125,4 +125,22 @@ describe("sendRecoveryAlert", () => {
 
     vi.unstubAllEnvs();
   });
+
+  it("shows 'unknown' duration when downtimeMs is null", async () => {
+    vi.stubEnv("ALERT_RECIPIENTS", "test@example.com");
+    vi.stubEnv("AWS_REGION", "us-east-1");
+
+    await sendRecoveryAlert(
+      "Website",
+      "2026-03-16T12:30:00Z",
+      150,
+      null,
+    );
+
+    expect(mockSend).toHaveBeenCalledTimes(1);
+    const sentParams = mockSend.mock.calls[0][0];
+    expect(sentParams.Message.Body.Html.Data).toContain("unknown");
+
+    vi.unstubAllEnvs();
+  });
 });

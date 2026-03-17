@@ -3,6 +3,7 @@ import type { HealthCheckRecord, ServiceStatus, Incident } from "@/types";
 
 
 const TTL_SECONDS = 90 * 24 * 60 * 60; // 90 days
+const MAX_INCIDENTS = 1000;
 
 /**
  * Store a health check result in a sorted set keyed by service ID.
@@ -39,6 +40,7 @@ export async function setServiceStatus(status: ServiceStatus): Promise<void> {
  */
 export async function addIncident(incident: Incident): Promise<void> {
   await kv.lpush("incidents", JSON.stringify(incident));
+  await kv.ltrim("incidents", 0, MAX_INCIDENTS - 1);
 }
 
 /**

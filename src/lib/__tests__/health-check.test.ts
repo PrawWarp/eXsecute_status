@@ -121,9 +121,43 @@ describe("processCheckResult", () => {
       expect.objectContaining({
         serviceId: "website",
         state: "up",
-        consecutiveCount: 1,
+        consecutiveCount: 0,
       }),
     );
+    expect(mockKv.addIncident).not.toHaveBeenCalled();
+  });
+
+  it("initializes as 'down' with incident and alert on first check if unhealthy", async () => {
+    mockKv.getServiceStatus.mockResolvedValue(null);
+
+    const result = await processCheckResult(WEBSITE, {
+      serviceId: "website",
+      timestamp: "2026-03-16T12:00:00Z",
+      healthy: false,
+      responseTimeMs: null,
+      statusCode: null,
+    });
+
+    expect(mockKv.setServiceStatus).toHaveBeenCalledWith(
+      expect.objectContaining({
+        serviceId: "website",
+        state: "down",
+        consecutiveCount: 0,
+      }),
+    );
+    expect(mockKv.addIncident).toHaveBeenCalledWith(
+      expect.objectContaining({
+        serviceId: "website",
+        serviceName: "Website",
+        resolvedAt: null,
+        downtimeMs: null,
+      }),
+    );
+    expect(mockEmail.sendDownAlert).toHaveBeenCalledWith(
+      "Website",
+      "2026-03-16T12:00:00Z",
+    );
+    expect(result).toEqual({ transitioned: true, newState: "down" });
   });
 
   it("increments consecutive failure count when service is up and check fails", async () => {
@@ -223,6 +257,33 @@ describe("processCheckResult", () => {
       "2026-03-16T12:00:00Z",
       150,
       3600000,
+    );
+  });
+
+  it("sends recovery alert with null downtime when incident not found", async () => {
+    const currentStatus: ServiceStatus = {
+      serviceId: "website",
+      state: "down",
+      consecutiveCount: 1,
+      lastCheckedAt: "2026-03-16T11:55:00Z",
+      lastResponseTimeMs: 100,
+    };
+    mockKv.getServiceStatus.mockResolvedValue(currentStatus);
+    mockKv.resolveIncident.mockResolvedValue(null);
+
+    await processCheckResult(WEBSITE, {
+      serviceId: "website",
+      timestamp: "2026-03-16T12:00:00Z",
+      healthy: true,
+      responseTimeMs: 150,
+      statusCode: 200,
+    });
+
+    expect(mockEmail.sendRecoveryAlert).toHaveBeenCalledWith(
+      "Website",
+      "2026-03-16T12:00:00Z",
+      150,
+      null,
     );
   });
 

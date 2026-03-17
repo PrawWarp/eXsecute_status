@@ -12,6 +12,7 @@ const mockKv = vi.hoisted(() => ({
   lrange: vi.fn(),
   llen: vi.fn(),
   lset: vi.fn(),
+  ltrim: vi.fn(),
   del: vi.fn(),
 }));
 
@@ -95,7 +96,7 @@ describe("getServiceStatus / setServiceStatus", () => {
 });
 
 describe("addIncident", () => {
-  it("prepends an incident to the incident list", async () => {
+  it("prepends an incident to the incident list and trims to max size", async () => {
     const incident: Incident = {
       id: "inc-001",
       serviceId: "website",
@@ -111,6 +112,7 @@ describe("addIncident", () => {
       "incidents",
       JSON.stringify(incident),
     );
+    expect(mockKv.ltrim).toHaveBeenCalledWith("incidents", 0, 999);
   });
 });
 

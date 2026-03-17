@@ -73,11 +73,11 @@ export async function sendRecoveryAlert(
   serviceName: string,
   timestamp: string,
   responseTimeMs: number | null,
-  downtimeMs: number,
+  downtimeMs: number | null,
 ): Promise<void> {
   const ses = getSesClient();
   const recipients = getAlertRecipients();
-  const duration = formatDuration(downtimeMs);
+  const duration = downtimeMs !== null ? formatDuration(downtimeMs) : "unknown";
 
   await ses.send(
     new SendEmailCommand({
