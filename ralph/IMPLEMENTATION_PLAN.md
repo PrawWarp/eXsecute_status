@@ -15,7 +15,8 @@
 - **Phase 6**: Complete
 - **Phase 7**: Complete
 - **Phase 8**: Complete
-- **Next**: Phase 9 — Deployment & Configuration
+- **Phase 9**: Complete
+- **All phases complete** — ready for deployment
 
 ## Known Issues
 
@@ -95,9 +96,9 @@ Tasks are ordered by dependency and priority. Each phase includes its own tests 
 
 ### Phase 9: Deployment & Configuration
 
-- [ ] Configure Vercel project for deployment (vercel.json if needed, environment variables)
-- [ ] Document deployment steps: Vercel KV provisioning, AWS SES credentials, GitHub Actions secrets, DNS CNAME for status.exsecute.com
-- [ ] Verify all success criteria from spec:
+- [x] Configure Vercel project for deployment (vercel.json if needed, environment variables)
+- [x] Document deployment steps: Vercel KV provisioning, AWS SES credentials, GitHub Actions secrets, DNS CNAME for status.exsecute.com
+- [x] Verify all success criteria from spec:
   - All 3 services monitored with 5-minute checks
   - Email alert within 15-20 minutes of outage (3 consecutive failures × 5 min = 15 min)
   - Status page shows current state and 90-day history
