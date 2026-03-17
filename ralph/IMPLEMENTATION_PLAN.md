@@ -14,7 +14,8 @@
 - **Phase 5**: Complete
 - **Phase 6**: Complete
 - **Phase 7**: Complete
-- **Next**: Phase 8 — GitHub Actions Workflow
+- **Phase 8**: Complete
+- **Next**: Phase 9 — Deployment & Configuration
 
 ## Known Issues
 
@@ -89,8 +90,8 @@ Tasks are ordered by dependency and priority. Each phase includes its own tests 
 
 ### Phase 8: GitHub Actions Workflow
 
-- [ ] Create .github/workflows/health-check.yml — cron schedule every 5 minutes, calls authenticated cron endpoint via curl with CRON_SECRET
-- [ ] Document required GitHub Actions secrets: CRON_SECRET, STATUS_PAGE_URL
+- [x] Create .github/workflows/health-check.yml — cron schedule every 5 minutes, calls authenticated cron endpoint via curl with CRON_SECRET
+- [x] Document required GitHub Actions secrets: CRON_SECRET, STATUS_PAGE_URL
 
 ### Phase 9: Deployment & Configuration
 
