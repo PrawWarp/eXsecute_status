@@ -254,6 +254,33 @@ describe("calculateUptimePercentage", () => {
     expect(uptime).toBe(70);
   });
 
+  it("returns one decimal place precision for non-integer percentages", async () => {
+    // 2 healthy out of 3 = 66.667% -> 66.7
+    const checks: HealthCheckRecord[] = [
+      ...Array.from({ length: 2 }, (_, i) => ({
+        serviceId: "website",
+        timestamp: new Date(2026, 2, 16, i).toISOString(),
+        healthy: true,
+        responseTimeMs: 100,
+        statusCode: 200,
+      })),
+      {
+        serviceId: "website",
+        timestamp: new Date(2026, 2, 16, 2).toISOString(),
+        healthy: false,
+        responseTimeMs: null,
+        statusCode: null,
+      },
+    ];
+
+    mockKv.zrange.mockResolvedValue(
+      checks.map((c) => JSON.stringify(c)),
+    );
+
+    const uptime = await calculateUptimePercentage("website", 90);
+    expect(uptime).toBe(66.7);
+  });
+
   it("returns 100 when no checks exist (no data = assume up)", async () => {
     mockKv.zrange.mockResolvedValue([]);
 

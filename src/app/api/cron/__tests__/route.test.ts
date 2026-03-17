@@ -63,6 +63,48 @@ describe("GET /api/cron", () => {
     expect(mockHealthCheck.processCheckResult).toHaveBeenCalledTimes(1);
   });
 
+  it("returns response with correct JSON structure", async () => {
+    const request = new Request("http://localhost/api/cron", {
+      headers: { Authorization: "Bearer test-secret-123" },
+    });
+
+    const response = await GET(request);
+    const body = await response.json();
+
+    expect(body).toHaveProperty("checked");
+    expect(body).toHaveProperty("results");
+    expect(body).toHaveProperty("timestamp");
+    expect(body.results[0]).toEqual({
+      serviceId: "website",
+      healthy: true,
+      responseTimeMs: 150,
+      transitioned: false,
+      newState: undefined,
+    });
+  });
+
+  it("catches individual service check failure and continues", async () => {
+    mockHealthCheck.checkService.mockRejectedValueOnce(new Error("DNS failure"));
+
+    const request = new Request("http://localhost/api/cron", {
+      headers: { Authorization: "Bearer test-secret-123" },
+    });
+
+    const response = await GET(request);
+    expect(response.status).toBe(200);
+
+    const body = await response.json();
+    expect(body.checked).toBe(1);
+    expect(body.results[0]).toEqual({
+      serviceId: "website",
+      healthy: null,
+      responseTimeMs: null,
+      transitioned: false,
+      newState: undefined,
+      error: "check failed",
+    });
+  });
+
   it("returns 401 when CRON_SECRET is not configured", async () => {
     vi.stubEnv("CRON_SECRET", "");
 

@@ -64,6 +64,14 @@ describe("GET /api/status", () => {
     expect(body.incidents[0].id).toBe("inc-001");
   });
 
+  it("propagates errors when KV throws", async () => {
+    mockKvFns.getServiceStatus.mockRejectedValue(new Error("KV connection failed"));
+    mockKvFns.calculateUptimePercentage.mockResolvedValue(100);
+    mockKvFns.getRecentIncidents.mockResolvedValue([]);
+
+    await expect(GET()).rejects.toThrow("KV connection failed");
+  });
+
   it("handles empty state (no checks yet)", async () => {
     mockKvFns.getServiceStatus.mockResolvedValue(null);
     mockKvFns.calculateUptimePercentage.mockResolvedValue(100);

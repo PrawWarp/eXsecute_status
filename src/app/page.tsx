@@ -36,10 +36,10 @@ export default async function StatusPage() {
   );
 
   return (
-    <main className="mx-auto min-h-screen max-w-3xl px-4 py-12">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-navy">eXsecute Status</h1>
-        <p className="mt-2 text-lg text-foreground/60">
+    <main className="mx-auto min-h-screen max-w-3xl px-4 py-8 md:py-12">
+      <header className="mb-6 md:mb-8">
+        <h1 className="text-2xl font-bold text-navy md:text-3xl">eXsecute Status</h1>
+        <p className="mt-2 text-base text-foreground/60 md:text-lg">
           {allUp ? "All systems operational" : "Some systems are experiencing issues"}
         </p>
       </header>
@@ -61,14 +61,14 @@ export default async function StatusPage() {
         ))}
       </section>
 
-      <section className="mt-12">
-        <h2 className="mb-4 text-xl font-semibold text-navy">
+      <section className="mt-8 md:mt-12">
+        <h2 className="mb-4 text-lg font-semibold text-navy md:text-xl">
           Recent Incidents
         </h2>
         <IncidentTimeline incidents={incidents} />
       </section>
 
-      <footer className="mt-16 border-t border-foreground/10 pt-4 text-center text-sm text-foreground/40">
+      <footer className="mt-12 border-t border-foreground/10 pt-4 text-center text-sm text-foreground/40 md:mt-16">
         <p>Powered by eXsecute</p>
       </footer>
     </main>

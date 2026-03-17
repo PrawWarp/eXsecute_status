@@ -88,10 +88,6 @@ export async function getRecentIncidents(count: number): Promise<Incident[]> {
 }
 
 /**
- * Calculate the uptime percentage for a service over the given number of days.
- * Returns a number 0-100. If no checks exist, returns 100 (assume up).
- */
-/**
  * Get raw check records for a service over the given number of days.
  * Used by UptimeBar to build day-by-day segments.
  */
@@ -134,5 +130,5 @@ export async function calculateUptimePercentage(
     if (record.healthy) healthy++;
   }
 
-  return Math.round((healthy / items.length) * 100);
+  return Math.round((healthy / items.length) * 1000) / 10;
 }

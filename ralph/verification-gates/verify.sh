@@ -1,5 +1,11 @@
 #!/bin/bash
+# Verification gate for eXsecute Status
+# Runs all quality and security checks before committing.
+
 set -eo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
 
 echo "=== Verification Gate ==="
 

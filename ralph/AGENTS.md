@@ -17,23 +17,25 @@ Application source code is in `src/`.
 
 ## Key Directories
 
-- Pages: `src/app/`
-- Components: `src/components/`
-- Types: `src/types/`
-- Utilities: `src/lib/`
-- API Routes: `src/app/api/`
+- `src/app/` — Next.js App Router pages and API routes
+- `src/app/api/cron/` — Authenticated cron health check endpoint
+- `src/app/api/status/` — Public status API endpoint
+- `src/components/` — React components (status cards, uptime bar, incident timeline)
+- `src/lib/` — Utilities (KV client, health check engine, email, debug logger)
+- `src/types/` — TypeScript type definitions
 
 ## Codebase Patterns
 
-- New page? Study an existing page in `src/app/` -- match its structure exactly.
-- New component? Study a similar component in `src/components/` -- match its patterns exactly.
+- New API route? Study `src/app/api/status/route.ts` — match its structure exactly.
+- New component? Study `src/components/status-card.tsx` — match its patterns exactly.
+- New utility? Study `src/lib/health-check.ts` — match its patterns exactly.
 - Modifying a file? Read the entire file first. Preserve all existing error handling, loading states, and user-facing feedback.
 
 ## Project Guardrails
 
-- When modifying existing files, preserve all existing error handling. Never remove a working catch block, error display, toast notification, or loading/error state without an equivalent or better replacement.
-- When authoring tests, capture the why -- test the behaviors that matter, not implementation details.
-- This is a security consulting platform. Study `CLAUDE.md` at the repo root for security requirements. Verify: `credentials: 'omit'` on external fetch calls, cron endpoint auth via CRON_SECRET, no direct console.* (use logForDebugging).
+9999999. When modifying existing files, preserve all existing error handling. Never remove a working catch block, error display, toast notification, or loading/error state without an equivalent or better replacement.
+99999999. When authoring tests, capture the why — test the behaviors that matter, not implementation details.
+999999999. This is a security consulting platform. Study `CLAUDE.md` at the repo root for security requirements. Verify: `credentials: 'include'` on all internal fetch calls, `credentials: 'omit'` on external health-check fetches, UUID validation before URL interpolation, CSV exports escape formula-injection characters, cron endpoint validates `CRON_SECRET` from Authorization header, no direct `console.*` — use `logForDebugging` from `src/lib/debug.ts`.
 
 ## Sandbox
 
@@ -47,3 +49,5 @@ Log blocked resources to `ralph/SANDBOX_VIOLATIONS.md` with the command and what
 - ESLint 9 flat config with `@eslint/eslintrc` FlatCompat for next config
 - Alert cooldown uses separate keys per event type: `alert-cooldown:{serviceId}:down` and `alert-cooldown:{serviceId}:up`
 - Cron auth uses crypto.timingSafeEqual for constant-time comparison
+- Gitleaks `.gitleaks.toml` excludes `.next/` and `node_modules/` (build artifacts with auto-generated keys)
+- Shared utility `src/lib/format.ts` for `formatDuration()` — used by email and incident timeline

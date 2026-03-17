@@ -11,4 +11,4 @@
 
 IMPORTANT: Plan only. Do NOT implement anything.
 
-ULTIMATE GOAL: Build a self-hosted uptime monitoring and status page for eXsecute services
+ULTIMATE GOAL: Self-hosted uptime monitoring and status page for eXsecute services
