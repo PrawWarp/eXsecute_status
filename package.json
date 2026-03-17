@@ -13,6 +13,7 @@
     "ci": "npm run type-check && npm run lint && npm test && npm run build"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.1010.0",
     "@vercel/kv": "^3.0.0",
     "next": "^15",
     "react": "^19",

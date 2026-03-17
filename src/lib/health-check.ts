@@ -5,7 +5,14 @@ import {
   setServiceStatus,
   addIncident,
   resolveIncident,
+  getRecentIncidents,
 } from "./kv";
+import {
+  shouldSendAlert,
+  recordAlertSent,
+  sendDownAlert,
+  sendRecoveryAlert,
+} from "./email";
 
 const HEALTH_CHECK_TIMEOUT_MS = 10_000;
 
@@ -87,11 +94,34 @@ export async function processCheckResult(
       resolvedAt: null,
       downtimeMs: null,
     });
+
+    if (await shouldSendAlert(service.id)) {
+      await sendDownAlert(service.name, record.timestamp);
+      await recordAlertSent(service.id);
+    }
+
     return { transitioned: true, newState: "down" };
   }
 
   if (result.transition === "up") {
     await resolveIncident(service.id, record.timestamp);
+
+    // Calculate downtime from incident for recovery email
+    const incidents = await getRecentIncidents(20);
+    const resolved = incidents.find(
+      (inc) => inc.serviceId === service.id && inc.resolvedAt !== null,
+    );
+
+    if (await shouldSendAlert(service.id)) {
+      await sendRecoveryAlert(
+        service.name,
+        record.timestamp,
+        record.responseTimeMs,
+        resolved?.downtimeMs ?? 0,
+      );
+      await recordAlertSent(service.id);
+    }
+
     return { transitioned: true, newState: "up" };
   }
 

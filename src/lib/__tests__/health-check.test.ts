@@ -8,9 +8,20 @@ const mockKv = vi.hoisted(() => ({
   setServiceStatus: vi.fn(),
   addIncident: vi.fn(),
   resolveIncident: vi.fn(),
+  getRecentIncidents: vi.fn().mockResolvedValue([]),
 }));
 
 vi.mock("../kv", () => mockKv);
+
+// Mock email module
+const mockEmail = vi.hoisted(() => ({
+  shouldSendAlert: vi.fn().mockResolvedValue(true),
+  recordAlertSent: vi.fn(),
+  sendDownAlert: vi.fn(),
+  sendRecoveryAlert: vi.fn(),
+}));
+
+vi.mock("../email", () => mockEmail);
 
 // Mock global fetch
 const mockFetch = vi.fn();
@@ -176,6 +187,69 @@ describe("processCheckResult", () => {
         downtimeMs: null,
       }),
     );
+    expect(mockEmail.sendDownAlert).toHaveBeenCalledWith(
+      "Website",
+      "2026-03-16T12:00:00Z",
+    );
+  });
+
+  it("sends recovery alert with downtime when service recovers", async () => {
+    const currentStatus: ServiceStatus = {
+      serviceId: "website",
+      state: "down",
+      consecutiveCount: 1,
+      lastCheckedAt: "2026-03-16T11:55:00Z",
+      lastResponseTimeMs: 100,
+    };
+    mockKv.getServiceStatus.mockResolvedValue(currentStatus);
+    mockKv.getRecentIncidents.mockResolvedValue([
+      {
+        id: "inc-001",
+        serviceId: "website",
+        serviceName: "Website",
+        createdAt: "2026-03-16T11:00:00Z",
+        resolvedAt: "2026-03-16T12:00:00Z",
+        downtimeMs: 3600000,
+      },
+    ]);
+
+    await processCheckResult(WEBSITE, {
+      serviceId: "website",
+      timestamp: "2026-03-16T12:00:00Z",
+      healthy: true,
+      responseTimeMs: 150,
+      statusCode: 200,
+    });
+
+    expect(mockEmail.sendRecoveryAlert).toHaveBeenCalledWith(
+      "Website",
+      "2026-03-16T12:00:00Z",
+      150,
+      3600000,
+    );
+  });
+
+  it("skips email when cooldown is active", async () => {
+    const currentStatus: ServiceStatus = {
+      serviceId: "website",
+      state: "up",
+      consecutiveCount: 2,
+      lastCheckedAt: "2026-03-16T11:55:00Z",
+      lastResponseTimeMs: null,
+    };
+    mockKv.getServiceStatus.mockResolvedValue(currentStatus);
+    mockEmail.shouldSendAlert.mockResolvedValue(false);
+
+    await processCheckResult(WEBSITE, {
+      serviceId: "website",
+      timestamp: "2026-03-16T12:00:00Z",
+      healthy: false,
+      responseTimeMs: null,
+      statusCode: null,
+    });
+
+    expect(mockEmail.sendDownAlert).not.toHaveBeenCalled();
+    expect(mockEmail.recordAlertSent).not.toHaveBeenCalled();
   });
 
   it("resets consecutive count when service is up and check succeeds", async () => {

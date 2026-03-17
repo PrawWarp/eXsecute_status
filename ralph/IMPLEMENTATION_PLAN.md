@@ -11,7 +11,8 @@
 - **Phase 2**: Complete
 - **Phase 3**: Complete
 - **Phase 4**: Complete
-- **Next**: Phase 5 — Email Alerting (AWS SES)
+- **Phase 5**: Complete
+- **Next**: Phase 6 — API Routes
 
 ## Known Issues
 
@@ -60,11 +61,11 @@ Tasks are ordered by dependency and priority. Each phase includes its own tests 
 
 ### Phase 5: Email Alerting (AWS SES)
 
-- [ ] Create src/lib/email.ts — AWS SES integration for sending alert emails
-- [ ] Implement alert email templates for down and recovery notifications (include service name, timestamp, response time, duration for recovery)
-- [ ] Implement cooldown mechanism to prevent alert storms from flapping services (1-hour cooldown per service, configurable via env var)
-- [ ] Wire alerting into state transition logic — send email only on state changes, respect cooldown
-- [ ] Write unit tests for email alerting (cooldown enforcement, template rendering, recipient configuration from ALERT_RECIPIENTS env var)
+- [x] Create src/lib/email.ts — AWS SES integration for sending alert emails
+- [x] Implement alert email templates for down and recovery notifications (include service name, timestamp, response time, duration for recovery)
+- [x] Implement cooldown mechanism to prevent alert storms from flapping services (1-hour cooldown per service, configurable via env var)
+- [x] Wire alerting into state transition logic — send email only on state changes, respect cooldown
+- [x] Write unit tests for email alerting (cooldown enforcement, template rendering, recipient configuration from ALERT_RECIPIENTS env var)
 
 ### Phase 6: API Routes
 
