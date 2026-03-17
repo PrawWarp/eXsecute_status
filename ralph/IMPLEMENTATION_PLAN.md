@@ -10,7 +10,8 @@
 - **Phase 1**: Complete
 - **Phase 2**: Complete
 - **Phase 3**: Complete
-- **Next**: Phase 4 — Health Check Engine
+- **Phase 4**: Complete
+- **Next**: Phase 5 — Email Alerting (AWS SES)
 
 ## Known Issues
 
@@ -51,11 +52,11 @@ Tasks are ordered by dependency and priority. Each phase includes its own tests 
 
 ### Phase 4: Health Check Engine
 
-- [ ] Create src/lib/health-check.ts — fetch each service endpoint with 10-second timeout, record status and response time; use `credentials: 'omit'` on fetch calls (external URLs)
-- [ ] Implement consecutive failure threshold logic (configurable, default 3 consecutive failures before declaring down)
-- [ ] Implement consecutive success threshold logic (configurable, default 2 consecutive successes before declaring recovery)
-- [ ] Implement state transition detection (up-to-down, down-to-up), incident creation on down, and incident resolution with `resolvedAt` timestamp and downtime duration on recovery
-- [ ] Write unit tests for health check logic (timeout handling, status detection, consecutive threshold transitions, incident logging)
+- [x] Create src/lib/health-check.ts — fetch each service endpoint with 10-second timeout, record status and response time; use `credentials: 'omit'` on fetch calls (external URLs)
+- [x] Implement consecutive failure threshold logic (configurable, default 3 consecutive failures before declaring down)
+- [x] Implement consecutive success threshold logic (configurable, default 2 consecutive successes before declaring recovery)
+- [x] Implement state transition detection (up-to-down, down-to-up), incident creation on down, and incident resolution with `resolvedAt` timestamp and downtime duration on recovery
+- [x] Write unit tests for health check logic (timeout handling, status detection, consecutive threshold transitions, incident logging)
 
 ### Phase 5: Email Alerting (AWS SES)
 
