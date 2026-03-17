@@ -8,7 +8,8 @@
 - **Source code**: Next.js 15 project initialized with Tailwind CSS 4, Vitest, ESLint
 - **Project scaffolding**: Complete — package.json, tsconfig, next.config.ts, CLAUDE.md, all configs
 - **Phase 1**: Complete
-- **Next**: Phase 2 — Types & Data Models
+- **Phase 2**: Complete
+- **Next**: Phase 3 — Data Layer (Vercel KV)
 
 ## Known Issues
 
@@ -34,9 +35,9 @@ Tasks are ordered by dependency and priority. Each phase includes its own tests 
 
 ### Phase 2: Types & Data Models
 
-- [ ] Define TypeScript types in src/types/ — HealthCheckRecord, ServiceStatus, Incident, ServiceConfig
-- [ ] Define service configuration constants (3 services: website at exsecute.com/health, app at app.exsecute.com root URL for HTTP 200, api at api.exsecute.com/health)
-- [ ] Write unit tests for type validation and service config correctness
+- [x] Define TypeScript types in src/types/ — HealthCheckRecord, ServiceStatus, Incident, ServiceConfig
+- [x] Define service configuration constants (3 services: website at exsecute.com/health, app at app.exsecute.com root URL for HTTP 200, api at api.exsecute.com/health)
+- [x] Write unit tests for type validation and service config correctness
 
 ### Phase 3: Data Layer (Vercel KV)
 
