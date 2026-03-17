@@ -1,0 +1,39 @@
+rules:
+  - id: no-throw-error-in-hooks
+    pattern: throw new Error(...)
+    paths:
+      include: [/src/hooks/]
+    message: "Use ApiException instead of Error in hooks (retry logic)."
+    languages: [typescript]
+    severity: ERROR
+
+  - id: no-console-in-production
+    pattern-either:
+      - pattern: console.log(...)
+      - pattern: console.error(...)
+      - pattern: console.warn(...)
+      - pattern: console.debug(...)
+      - pattern: console.info(...)
+    paths:
+      exclude: [/src/lib/debug.ts, "**/__tests__/**", "**/*.test.*"]
+    message: "Use logForDebugging from src/lib/debug.ts."
+    languages: [typescript, javascript]
+    severity: ERROR
+
+  - id: fetch-with-options-missing-credentials
+    patterns:
+      - pattern: "fetch($URL, { ..., })"
+      - pattern-not: "fetch($URL, { ..., credentials: $CRED, ... })"
+    paths:
+      exclude: ["**/__tests__/**", "**/*.test.*"]
+    message: "All fetch calls must include credentials: 'include'."
+    languages: [typescript, javascript]
+    severity: WARNING
+
+  - id: fetch-without-options-missing-credentials
+    pattern: "fetch($URL)"
+    paths:
+      exclude: ["**/__tests__/**", "**/*.test.*"]
+    message: "Bare fetch() calls must include an options object with credentials: 'include'."
+    languages: [typescript, javascript]
+    severity: WARNING
