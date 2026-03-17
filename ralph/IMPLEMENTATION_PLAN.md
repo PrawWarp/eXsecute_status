@@ -12,7 +12,8 @@
 - **Phase 3**: Complete
 - **Phase 4**: Complete
 - **Phase 5**: Complete
-- **Next**: Phase 6 — API Routes
+- **Phase 6**: Complete
+- **Next**: Phase 7 — Status Page UI
 
 ## Known Issues
 
@@ -69,10 +70,10 @@ Tasks are ordered by dependency and priority. Each phase includes its own tests 
 
 ### Phase 6: API Routes
 
-- [ ] Create authenticated cron endpoint (src/app/api/cron/route.ts) — validates CRON_SECRET header, runs all health checks, updates state in KV, sends alerts on transitions
-- [ ] Create public status API endpoint (src/app/api/status/route.ts) — returns current status of all services, uptime percentages, recent incidents
-- [ ] Write integration tests for cron route (authentication validation, full check cycle with mocked services)
-- [ ] Write integration tests for status route (correct data shape, handles empty state)
+- [x] Create authenticated cron endpoint (src/app/api/cron/route.ts) — validates CRON_SECRET header, runs all health checks, updates state in KV, sends alerts on transitions
+- [x] Create public status API endpoint (src/app/api/status/route.ts) — returns current status of all services, uptime percentages, recent incidents
+- [x] Write integration tests for cron route (authentication validation, full check cycle with mocked services)
+- [x] Write integration tests for status route (correct data shape, handles empty state)
 
 ### Phase 7: Status Page UI
 
