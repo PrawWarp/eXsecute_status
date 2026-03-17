@@ -63,7 +63,7 @@ describe("GET /api/cron", () => {
     expect(mockHealthCheck.processCheckResult).toHaveBeenCalledTimes(1);
   });
 
-  it("returns 500 when CRON_SECRET is not configured", async () => {
+  it("returns 401 when CRON_SECRET is not configured", async () => {
     vi.stubEnv("CRON_SECRET", "");
 
     const request = new Request("http://localhost/api/cron", {
@@ -71,6 +71,6 @@ describe("GET /api/cron", () => {
     });
 
     const response = await GET(request);
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(401);
   });
 });

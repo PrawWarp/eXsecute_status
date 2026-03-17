@@ -2,9 +2,12 @@ import { kv } from "@vercel/kv";
 import type { HealthCheckRecord, ServiceStatus, Incident } from "@/types";
 
 
+const TTL_SECONDS = 90 * 24 * 60 * 60; // 90 days
+
 /**
  * Store a health check result in a sorted set keyed by service ID.
  * Score is the timestamp in epoch ms for range queries.
+ * TTL is reset on each write so the key expires 90 days after the last check.
  */
 export async function storeCheckResult(record: HealthCheckRecord): Promise<void> {
   const key = `checks:${record.serviceId}`;
@@ -14,6 +17,7 @@ export async function storeCheckResult(record: HealthCheckRecord): Promise<void>
     score,
     member: JSON.stringify(record),
   });
+  await kv.expire(key, TTL_SECONDS);
 }
 
 /**
@@ -45,12 +49,10 @@ export async function addIncident(incident: Incident): Promise<void> {
 export async function resolveIncident(
   serviceId: string,
   resolvedAt: string,
-): Promise<void> {
-  const len = await kv.llen("incidents");
-  if (len === 0) return;
-
-  const items = await kv.lrange<string>("incidents", 0, len - 1);
-  if (!items) return;
+): Promise<Incident | null> {
+  const SCAN_LIMIT = 200;
+  const items = await kv.lrange<string>("incidents", 0, SCAN_LIMIT - 1);
+  if (!items || items.length === 0) return null;
 
   for (let i = 0; i < items.length; i++) {
     const raw = items[i];
@@ -65,9 +67,11 @@ export async function resolveIncident(
         downtimeMs: resolvedAtTime - createdAtTime,
       };
       await kv.lset("incidents", i, JSON.stringify(resolved));
-      return;
+      return resolved;
     }
   }
+
+  return null;
 }
 
 /**
@@ -80,6 +84,31 @@ export async function getRecentIncidents(count: number): Promise<Incident[]> {
   return items.map((raw) => {
     const parsed: Incident = typeof raw === "string" ? JSON.parse(raw) : raw;
     return parsed;
+  });
+}
+
+/**
+ * Calculate the uptime percentage for a service over the given number of days.
+ * Returns a number 0-100. If no checks exist, returns 100 (assume up).
+ */
+/**
+ * Get raw check records for a service over the given number of days.
+ * Used by UptimeBar to build day-by-day segments.
+ */
+export async function getChecksForPeriod(
+  serviceId: string,
+  days: number,
+): Promise<HealthCheckRecord[]> {
+  const now = Date.now();
+  const cutoff = now - days * 24 * 60 * 60 * 1000;
+  const key = `checks:${serviceId}`;
+
+  const items = await kv.zrange<string[]>(key, cutoff, now, { byScore: true });
+  if (!items || items.length === 0) return [];
+
+  return items.map((raw) => {
+    const record: HealthCheckRecord = typeof raw === "string" ? JSON.parse(raw) : raw;
+    return record;
   });
 }
 

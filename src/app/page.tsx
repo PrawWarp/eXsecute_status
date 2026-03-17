@@ -2,6 +2,7 @@ import { SERVICES } from "@/lib/services";
 import {
   getServiceStatus,
   calculateUptimePercentage,
+  getChecksForPeriod,
   getRecentIncidents,
 } from "@/lib/kv";
 import { ServiceStatusCard } from "@/components/status-card";
@@ -13,15 +14,17 @@ export const dynamic = "force-dynamic";
 export default async function StatusPage() {
   const services = await Promise.all(
     SERVICES.map(async (service) => {
-      const [status, uptimePercentage] = await Promise.all([
+      const [status, uptimePercentage, checks] = await Promise.all([
         getServiceStatus(service.id),
         calculateUptimePercentage(service.id, 90),
+        getChecksForPeriod(service.id, 90),
       ]);
 
       return {
         ...service,
         status,
         uptimePercentage,
+        checks,
       };
     }),
   );
@@ -52,7 +55,7 @@ export default async function StatusPage() {
               uptimePercentage={service.uptimePercentage}
             />
             <div className="mt-2">
-              <UptimeBar checks={[]} days={90} />
+              <UptimeBar checks={service.checks} days={90} />
             </div>
           </div>
         ))}

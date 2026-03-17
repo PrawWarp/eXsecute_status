@@ -50,32 +50,39 @@ describe("getAlertRecipients", () => {
 describe("shouldSendAlert", () => {
   it("returns true when no recent alert exists (no cooldown)", async () => {
     mockKvFns.get.mockResolvedValue(null);
-    const result = await shouldSendAlert("website");
+    const result = await shouldSendAlert("website", "down");
     expect(result).toBe(true);
+    expect(mockKvFns.get).toHaveBeenCalledWith("alert-cooldown:website:down");
   });
 
   it("returns false when alert was sent within cooldown period", async () => {
-    // Last alert 30 minutes ago (within 1-hour cooldown)
     const thirtyMinAgo = Date.now() - 30 * 60 * 1000;
     mockKvFns.get.mockResolvedValue(thirtyMinAgo);
-    const result = await shouldSendAlert("website");
+    const result = await shouldSendAlert("website", "down");
     expect(result).toBe(false);
   });
 
   it("returns true when alert was sent outside cooldown period", async () => {
-    // Last alert 2 hours ago (outside 1-hour cooldown)
     const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
     mockKvFns.get.mockResolvedValue(twoHoursAgo);
-    const result = await shouldSendAlert("website");
+    const result = await shouldSendAlert("website", "down");
     expect(result).toBe(true);
+  });
+
+  it("uses separate cooldown keys for down and up alerts", async () => {
+    mockKvFns.get.mockResolvedValue(null);
+    await shouldSendAlert("website", "down");
+    await shouldSendAlert("website", "up");
+    expect(mockKvFns.get).toHaveBeenCalledWith("alert-cooldown:website:down");
+    expect(mockKvFns.get).toHaveBeenCalledWith("alert-cooldown:website:up");
   });
 });
 
 describe("recordAlertSent", () => {
-  it("stores the current timestamp for the service's alert cooldown", async () => {
-    await recordAlertSent("website");
+  it("stores the current timestamp for the service's typed alert cooldown", async () => {
+    await recordAlertSent("website", "down");
     expect(mockKvFns.set).toHaveBeenCalledWith(
-      "alert-cooldown:website",
+      "alert-cooldown:website:down",
       expect.any(Number),
     );
   });

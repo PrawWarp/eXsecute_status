@@ -5,6 +5,7 @@ const mockKv = vi.hoisted(() => ({
   set: vi.fn(),
   get: vi.fn(),
   zadd: vi.fn(),
+  expire: vi.fn(),
   zrange: vi.fn(),
   zcard: vi.fn(),
   lpush: vi.fn(),
@@ -25,6 +26,7 @@ import {
   addIncident,
   resolveIncident,
   getRecentIncidents,
+  getChecksForPeriod,
   calculateUptimePercentage,
 } from "../kv";
 
@@ -51,6 +53,7 @@ describe("storeCheckResult", () => {
         member: JSON.stringify(record),
       },
     );
+    expect(mockKv.expire).toHaveBeenCalledWith("checks:website", 90 * 24 * 60 * 60);
   });
 });
 
@@ -112,7 +115,7 @@ describe("addIncident", () => {
 });
 
 describe("resolveIncident", () => {
-  it("resolves the most recent unresolved incident for a service", async () => {
+  it("resolves the most recent unresolved incident and returns it", async () => {
     const unresolved: Incident = {
       id: "inc-001",
       serviceId: "website",
@@ -122,7 +125,6 @@ describe("resolveIncident", () => {
       downtimeMs: null,
     };
 
-    mockKv.llen.mockResolvedValue(2);
     mockKv.lrange.mockResolvedValue([
       JSON.stringify(unresolved),
       JSON.stringify({
@@ -135,17 +137,18 @@ describe("resolveIncident", () => {
       }),
     ]);
 
-    await resolveIncident("website", "2026-03-16T12:30:00Z");
+    const result = await resolveIncident("website", "2026-03-16T12:30:00Z");
 
     expect(mockKv.lset).toHaveBeenCalledWith(
       "incidents",
       0,
       expect.stringContaining('"resolvedAt":"2026-03-16T12:30:00Z"'),
     );
+    expect(result).not.toBeNull();
+    expect(result!.downtimeMs).toBe(1800000);
   });
 
-  it("does nothing if no unresolved incident exists for the service", async () => {
-    mockKv.llen.mockResolvedValue(1);
+  it("returns null if no unresolved incident exists for the service", async () => {
     mockKv.lrange.mockResolvedValue([
       JSON.stringify({
         id: "inc-001",
@@ -157,9 +160,10 @@ describe("resolveIncident", () => {
       }),
     ]);
 
-    await resolveIncident("website", "2026-03-16T13:00:00Z");
+    const result = await resolveIncident("website", "2026-03-16T13:00:00Z");
 
     expect(mockKv.lset).not.toHaveBeenCalled();
+    expect(result).toBeNull();
   });
 });
 
@@ -255,5 +259,38 @@ describe("calculateUptimePercentage", () => {
 
     const uptime = await calculateUptimePercentage("website", 90);
     expect(uptime).toBe(100);
+  });
+});
+
+describe("getChecksForPeriod", () => {
+  it("returns parsed health check records for the given period", async () => {
+    const checks: HealthCheckRecord[] = [
+      {
+        serviceId: "website",
+        timestamp: "2026-03-16T12:00:00Z",
+        healthy: true,
+        responseTimeMs: 100,
+        statusCode: 200,
+      },
+      {
+        serviceId: "website",
+        timestamp: "2026-03-16T12:05:00Z",
+        healthy: false,
+        responseTimeMs: null,
+        statusCode: 500,
+      },
+    ];
+
+    mockKv.zrange.mockResolvedValue(checks.map((c) => JSON.stringify(c)));
+
+    const result = await getChecksForPeriod("website", 90);
+    expect(result).toEqual(checks);
+  });
+
+  it("returns empty array when no checks exist", async () => {
+    mockKv.zrange.mockResolvedValue([]);
+
+    const result = await getChecksForPeriod("website", 90);
+    expect(result).toEqual([]);
   });
 });

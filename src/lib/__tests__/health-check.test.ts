@@ -7,8 +7,7 @@ const mockKv = vi.hoisted(() => ({
   getServiceStatus: vi.fn(),
   setServiceStatus: vi.fn(),
   addIncident: vi.fn(),
-  resolveIncident: vi.fn(),
-  getRecentIncidents: vi.fn().mockResolvedValue([]),
+  resolveIncident: vi.fn().mockResolvedValue(null),
 }));
 
 vi.mock("../kv", () => mockKv);
@@ -122,7 +121,7 @@ describe("processCheckResult", () => {
       expect.objectContaining({
         serviceId: "website",
         state: "up",
-        consecutiveCount: 0,
+        consecutiveCount: 1,
       }),
     );
   });
@@ -202,16 +201,14 @@ describe("processCheckResult", () => {
       lastResponseTimeMs: 100,
     };
     mockKv.getServiceStatus.mockResolvedValue(currentStatus);
-    mockKv.getRecentIncidents.mockResolvedValue([
-      {
-        id: "inc-001",
-        serviceId: "website",
-        serviceName: "Website",
-        createdAt: "2026-03-16T11:00:00Z",
-        resolvedAt: "2026-03-16T12:00:00Z",
-        downtimeMs: 3600000,
-      },
-    ]);
+    mockKv.resolveIncident.mockResolvedValue({
+      id: "inc-001",
+      serviceId: "website",
+      serviceName: "Website",
+      createdAt: "2026-03-16T11:00:00Z",
+      resolvedAt: "2026-03-16T12:00:00Z",
+      downtimeMs: 3600000,
+    });
 
     await processCheckResult(WEBSITE, {
       serviceId: "website",

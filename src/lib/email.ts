@@ -18,9 +18,11 @@ export function getAlertRecipients(): string[] {
 
 /**
  * Check if we should send an alert for this service (respects cooldown).
+ * Uses separate keys for down/up so a recovery alert is never suppressed
+ * by a recent down alert.
  */
-export async function shouldSendAlert(serviceId: string): Promise<boolean> {
-  const lastSent = await kv.get<number>(`alert-cooldown:${serviceId}`);
+export async function shouldSendAlert(serviceId: string, type: "down" | "up"): Promise<boolean> {
+  const lastSent = await kv.get<number>(`alert-cooldown:${serviceId}:${type}`);
   if (lastSent === null) return true;
   return Date.now() - lastSent >= COOLDOWN_MS;
 }
@@ -28,8 +30,8 @@ export async function shouldSendAlert(serviceId: string): Promise<boolean> {
 /**
  * Record that an alert was just sent for this service.
  */
-export async function recordAlertSent(serviceId: string): Promise<void> {
-  await kv.set(`alert-cooldown:${serviceId}`, Date.now());
+export async function recordAlertSent(serviceId: string, type: "down" | "up"): Promise<void> {
+  await kv.set(`alert-cooldown:${serviceId}:${type}`, Date.now());
 }
 
 /**

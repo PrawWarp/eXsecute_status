@@ -5,7 +5,6 @@ import {
   setServiceStatus,
   addIncident,
   resolveIncident,
-  getRecentIncidents,
 } from "./kv";
 import {
   shouldSendAlert,
@@ -64,11 +63,11 @@ export async function processCheckResult(
   const currentStatus = await getServiceStatus(service.id);
 
   if (!currentStatus) {
-    // First check ever — initialize status
+    // First check ever — initialize status; count this check
     await setServiceStatus({
       serviceId: service.id,
       state: record.healthy ? "up" : "down",
-      consecutiveCount: 0,
+      consecutiveCount: 1,
       lastCheckedAt: record.timestamp,
       lastResponseTimeMs: record.responseTimeMs,
     });
@@ -95,31 +94,25 @@ export async function processCheckResult(
       downtimeMs: null,
     });
 
-    if (await shouldSendAlert(service.id)) {
+    if (await shouldSendAlert(service.id, "down")) {
       await sendDownAlert(service.name, record.timestamp);
-      await recordAlertSent(service.id);
+      await recordAlertSent(service.id, "down");
     }
 
     return { transitioned: true, newState: "down" };
   }
 
   if (result.transition === "up") {
-    await resolveIncident(service.id, record.timestamp);
+    const resolved = await resolveIncident(service.id, record.timestamp);
 
-    // Calculate downtime from incident for recovery email
-    const incidents = await getRecentIncidents(20);
-    const resolved = incidents.find(
-      (inc) => inc.serviceId === service.id && inc.resolvedAt !== null,
-    );
-
-    if (await shouldSendAlert(service.id)) {
+    if (await shouldSendAlert(service.id, "up")) {
       await sendRecoveryAlert(
         service.name,
         record.timestamp,
         record.responseTimeMs,
         resolved?.downtimeMs ?? 0,
       );
-      await recordAlertSent(service.id);
+      await recordAlertSent(service.id, "up");
     }
 
     return { transitioned: true, newState: "up" };

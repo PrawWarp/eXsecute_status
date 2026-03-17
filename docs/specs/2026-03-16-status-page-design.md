@@ -49,7 +49,7 @@ The marketing site (`exsecute.com`) went down for days without anyone noticing. 
 - **Vercel free tier** — Status page and API hosted on Vercel Hobby (free). Cron scheduling handled by GitHub Actions (free), not Vercel Cron (which requires Pro at $20/month for sub-daily intervals)
 - **AWS SES for email** — Already have production SES with `exsecute.com` domain verified (us-east-1). `status@exsecute.com` works as sender without additional setup
 - **eXsecute brand** — Navy (`#003d7a`), Cyan (`#00acc1`), Green (`#10b981`). Use CSS variables, not hardcoded hex. Clean, minimal design
-- **No false alarms** — Don't alert on transient blips. Require multiple consecutive failures before declaring a service down, and multiple successes before declaring recovery
+- **No false alarms** — Don't alert on transient blips. Require 3 consecutive failures before declaring a service down, and 2 consecutive successes before declaring recovery
 - **No alert storms** — Include cooldown between alerts for the same service to handle flapping
 - **Secure cron endpoint** — The health check trigger must be authenticated (not publicly callable)
 
@@ -58,7 +58,7 @@ The marketing site (`exsecute.com`) went down for days without anyone noticing. 
 | Service | Health Endpoint | Notes |
 |---|---|---|
 | Website | `https://exsecute.com/health` | Flask app, returns JSON `{"status": "healthy"}` |
-| App | `https://app.exsecute.com` | Next.js app on Vercel. Needs a dedicated `/api/health` endpoint (or verify root 200 is reliable) |
+| App | `https://app.exsecute.com` | Next.js app on Vercel. Check root URL for HTTP 200 (no dedicated health endpoint available) |
 | API | `https://api.exsecute.com/health` | FastAPI on Vultr |
 
 ## Key Behaviors
@@ -72,7 +72,7 @@ The marketing site (`exsecute.com`) went down for days without anyone noticing. 
 ### Alerting
 - Email via AWS SES on state transitions (up-to-down, down-to-up)
 - No repeat alerts while a service stays in the same state
-- Cooldown to prevent alert storms from flapping services
+- 1-hour cooldown per service to prevent alert storms from flapping services
 - Recipients configurable via environment variable (default: `info@exsecute.com`)
 
 ### Status Page
@@ -82,9 +82,13 @@ The marketing site (`exsecute.com`) went down for days without anyone noticing. 
 - Show recent incidents with timestamps
 - Responsive and mobile-friendly
 
+### Incidents
+- An incident is created when a service transitions from up to down (after consecutive failure threshold)
+- An incident is resolved (with `resolvedAt` timestamp and downtime duration) when the service transitions from down to up
+- Incident log persisted indefinitely (or until manually cleared)
+
 ### Data Retention
 - 90 days of check history (auto-expire, no manual cleanup)
-- Incident log persisted indefinitely (or until manually cleared)
 
 ## Tech Stack Guidance
 
