@@ -1,5 +1,7 @@
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 import type { HealthCheckRecord, ServiceStatus, Incident } from "@/types";
+
+const kv = Redis.fromEnv();
 
 
 const TTL_SECONDS = 90 * 24 * 60 * 60; // 90 days

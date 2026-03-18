@@ -12,7 +12,7 @@
 
 - Next.js 15, App Router, TypeScript
 - Tailwind CSS 4 with CSS variables for brand colors
-- Vercel KV (Redis) for data storage
+- Upstash Redis for data storage
 - AWS SES for email alerts
 - Vitest + Testing Library for tests
 
