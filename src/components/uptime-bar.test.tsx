@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
-import { UptimeBar } from "../uptime-bar";
+import { UptimeBar } from "./uptime-bar";
 import type { HealthCheckRecord } from "@/types";
 
 describe("UptimeBar", () => {

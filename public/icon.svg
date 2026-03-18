@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="44mm"
+   height="44mm"
+   viewBox="0 0 44 44"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="logo-transparent-symbol.svg"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.2310673"
+     inkscape:cx="95.039481"
+     inkscape:cy="86.510297"
+     inkscape:window-width="1264"
+     inkscape:window-height="456"
+     inkscape:window-x="206"
+     inkscape:window-y="50"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="final_logo"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(104.42227,-227.16129)">
+    <g
+       id="g7"
+       transform="matrix(0.50627576,0,0,0.50627576,-133.56705,195.22628)"
+       style="display:inline"
+       inkscape:label="pivot-logo-3step">
+      <!-- Square 1: Static (gray) -->
+      <rect
+         id="rect3"
+         x="108.3602"
+         y="-13.08151"
+         width="13.429257"
+         height="13.429257"
+         fill="url(#pivot-grad1)"
+         style="opacity:0.51;fill:#10b981;fill-opacity:1;stroke-width:0.479616"
+         transform="rotate(56.521957)"
+         inkscape:label="square1-static" />
+      <rect
+         id="rect8"
+         x="103.75267"
+         y="-61.288044"
+         width="19.788448"
+         height="19.788448"
+         fill="url(#pivot-grad1)"
+         style="display:inline;opacity:0.628571;fill:#10b981;fill-opacity:1;stroke-width:0.70673"
+         transform="rotate(72.965207)" />
+      <!-- Square 2: Pivoting (orange) - overlapping with first -->
+      <rect
+         id="rect5"
+         x="100.731"
+         y="-99.070107"
+         width="29.070688"
+         height="29.070688"
+         fill="url(#pivot-grad2)"
+         transform="rotate(80.198764)"
+         style="opacity:0.78961;fill:#00acc1;fill-opacity:1;stroke-width:1.03824" />
+      <!-- Square 3: Diamond (cyan) - overlapping with second -->
+      <rect
+         id="rect7"
+         x="103.02165"
+         y="93.923027"
+         width="38.595741"
+         height="38.595741"
+         fill="url(#pivot-grad3)"
+         transform="rotate(-0.56204467)"
+         style="display:inline;fill:#003d7a;fill-opacity:1;stroke-width:1.37837"
+         inkscape:label="square3-diamond" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:100;font-stretch:normal;font-size:23.5402px;font-family:'Apple SD Gothic Neo';-inkscape-font-specification:'Apple SD Gothic Neo, Thin';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:none;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:0.0579734;stroke-opacity:1"
+       x="-59.097736"
+       y="246.7162"
+       id="text22"
+       inkscape:label="Title"><tspan
+         sodipodi:role="line"
+         id="tspan22"
+         x="0"
+         y="0"
+         style="font-style:normal;font-variant:normal;font-weight:200;font-stretch:normal;font-size:23.5402px;font-family:'Mukta Mahee';-inkscape-font-specification:'Mukta Mahee, Ultra-Light';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0579734">eXsecute</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Bangla Sangam MN';-inkscape-font-specification:'Bangla Sangam MN, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:none;fill:#1a1a1a;fill-opacity:1;stroke:#000000;stroke-width:0.0554043;stroke-opacity:1"
+       x="-57.290337"
+       y="252.74631"
+       id="text1"
+       inkscape:label="Subtitle"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         x="0"
+         y="0"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Bangla Sangam MN';-inkscape-font-specification:'Bangla Sangam MN, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.0554043">TRANSPARENCY. EXECUTION. TRUST.</tspan></text>
+  </g>
+</svg>

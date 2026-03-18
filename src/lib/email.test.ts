@@ -23,7 +23,7 @@ import {
   shouldSendAlert,
   recordAlertSent,
   getAlertRecipients,
-} from "../email";
+} from "./email";
 
 beforeEach(() => {
   vi.clearAllMocks();

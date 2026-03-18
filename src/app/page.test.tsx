@@ -32,7 +32,7 @@ const mockKvFns = vi.hoisted(() => ({
 
 vi.mock("@/lib/kv", () => mockKvFns);
 
-import StatusPage from "../page";
+import StatusPage from "./page";
 
 beforeEach(() => {
   vi.clearAllMocks();
