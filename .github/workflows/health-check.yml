@@ -1,0 +1,20 @@
+name: Health Check
+
+on:
+  schedule:
+    # Every 5 minutes
+    - cron: '*/5 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger health check
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          STATUS_PAGE_URL: ${{ secrets.STATUS_PAGE_URL }}
+        run: |
+          curl -sf -X GET \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$STATUS_PAGE_URL/api/cron"
