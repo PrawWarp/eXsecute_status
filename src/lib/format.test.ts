@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatDuration } from "../format";
+import { formatDuration } from "./format";
 
 describe("formatDuration", () => {
   it("formats seconds only", () => {

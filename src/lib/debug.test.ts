@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { logForDebugging } from "../debug";
+import { logForDebugging } from "./debug";
 
 describe("logForDebugging", () => {
   it("delegates to console with the specified level", () => {

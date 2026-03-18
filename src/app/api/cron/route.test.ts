@@ -27,7 +27,7 @@ const mockHealthCheck = vi.hoisted(() => ({
 
 vi.mock("@/lib/health-check", () => mockHealthCheck);
 
-import { GET } from "../route";
+import { GET } from "./route";
 
 beforeEach(() => {
   vi.clearAllMocks();

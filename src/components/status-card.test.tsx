@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { ServiceStatusCard } from "../status-card";
+import { ServiceStatusCard } from "./status-card";
 
 describe("ServiceStatusCard", () => {
   it("renders service name and 'Operational' when up", () => {

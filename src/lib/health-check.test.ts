@@ -10,7 +10,7 @@ const mockKv = vi.hoisted(() => ({
   resolveIncident: vi.fn().mockResolvedValue(null),
 }));
 
-vi.mock("../kv", () => mockKv);
+vi.mock("./kv", () => mockKv);
 
 // Mock email module
 const mockEmail = vi.hoisted(() => ({
@@ -20,13 +20,13 @@ const mockEmail = vi.hoisted(() => ({
   sendRecoveryAlert: vi.fn(),
 }));
 
-vi.mock("../email", () => mockEmail);
+vi.mock("./email", () => mockEmail);
 
 // Mock global fetch
 const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 
-import { checkService, processCheckResult } from "../health-check";
+import { checkService, processCheckResult } from "./health-check";
 
 const WEBSITE: ServiceConfig = {
   id: "website",

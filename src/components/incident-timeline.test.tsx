@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { IncidentTimeline } from "../incident-timeline";
+import { IncidentTimeline } from "./incident-timeline";
 import type { Incident } from "@/types";
 
 describe("IncidentTimeline", () => {

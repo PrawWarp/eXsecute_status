@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { SERVICES, getServiceById } from "../services";
+import { SERVICES, getServiceById } from "./services";
 
 describe("Service configuration", () => {
   it("defines exactly 3 services", () => {

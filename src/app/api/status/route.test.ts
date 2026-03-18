@@ -23,7 +23,7 @@ const mockKvFns = vi.hoisted(() => ({
 
 vi.mock("@/lib/kv", () => mockKvFns);
 
-import { GET } from "../route";
+import { GET } from "./route";
 
 beforeEach(() => {
   vi.clearAllMocks();

@@ -29,7 +29,7 @@ import {
   getRecentIncidents,
   getChecksForPeriod,
   calculateUptimePercentage,
-} from "../kv";
+} from "./kv";
 
 beforeEach(() => {
   vi.clearAllMocks();
