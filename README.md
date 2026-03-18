@@ -21,16 +21,16 @@ Deploy as a standard Next.js app on Vercel. No `vercel.json` needed.
 | Variable | Description |
 |----------|-------------|
 | `CRON_SECRET` | Shared secret for authenticating the health check cron endpoint |
-| `KV_REST_API_URL` | Vercel KV REST API URL (auto-set when KV store is linked) |
-| `KV_REST_API_TOKEN` | Vercel KV REST API token (auto-set when KV store is linked) |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL (auto-set when Upstash integration is added) |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST token (auto-set when Upstash integration is added) |
 | `AWS_ACCESS_KEY_ID` | AWS credentials for SES email sending |
 | `AWS_SECRET_ACCESS_KEY` | AWS credentials for SES email sending |
 | `AWS_REGION` | AWS region for SES (default: `us-east-1`) |
 | `ALERT_RECIPIENTS` | Comma-separated email addresses (default: `info@exsecute.com`) |
 
-### 2. Vercel KV
+### 2. Upstash Redis
 
-Create a KV store in the Vercel dashboard and link it to the project. The `KV_REST_API_URL` and `KV_REST_API_TOKEN` environment variables are set automatically.
+Add the Upstash Redis integration from the Vercel Marketplace. The `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` environment variables are set automatically.
 
 ### 3. GitHub Actions Secrets
 

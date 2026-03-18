@@ -13,8 +13,8 @@ const mockKvFns = vi.hoisted(() => ({
   set: vi.fn(),
 }));
 
-vi.mock("@vercel/kv", () => ({
-  kv: mockKvFns,
+vi.mock("@upstash/redis", () => ({
+  Redis: { fromEnv: () => mockKvFns },
 }));
 
 import {

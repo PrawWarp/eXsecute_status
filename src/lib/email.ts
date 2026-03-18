@@ -1,5 +1,7 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
-import { kv } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
+
+const kv = Redis.fromEnv();
 import { formatDuration } from "./format";
 
 const COOLDOWN_MS = 60 * 60 * 1000; // 1 hour
