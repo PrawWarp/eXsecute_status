@@ -13,11 +13,14 @@
     "ci": "npm run type-check && npm run lint && npm test && npm run build"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.1010.0",
+    "@aws-sdk/client-ses": "^3.1011.0",
     "@upstash/redis": "^1.37.0",
-    "next": "^15",
+    "next": "^16.1.7",
     "react": "^19",
     "react-dom": "^19"
+  },
+  "overrides": {
+    "fast-xml-parser": "^5.5.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
